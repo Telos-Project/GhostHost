@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<head>
+	<script src="https://cdn.jsdelivr.net/gh/Telos-Project/AutoCORS/Code/autoCORS.js"></script>
+	<script>
+
+		function getURLArguments(url) {
+
+			if(url == null)
+				url = window.location.href;
+
+			let vars = { };
+
+			url.replace(
+				/[?&]+([^=&]+)=([^&]*)/gi,
+				function(m, key, value) {
+					vars[decodeURIComponent(key)] = decodeURIComponent(value);
+				}
+			);
+
+			return vars;
+		}
+
+		autoCORS.applyDefault();
+
+		if(getURLArguments()["html"] != null) {
+
+			document.open();
+
+			document.write(autoCORS.send(
+				{ request: { method: "GET", uri: getURLArguments()["html"] } }
+			).body);
+
+			document.close();
+
+			Array.from(document.querySelectorAll("script")).forEach(script => {
+
+				if(script.getAttribute("src") != null) {
+
+					(1, eval)(autoCORS.send({ request: {
+						method: "GET",
+						uri: script.getAttribute("src")
+					} }).body)
+				}
+
+				(1, eval)(script.text);
+			});
+		}
+
+		else if(getURLArguments()["js"] != null) {
+			
+			eval(autoCORS.send(
+				{ request: { method: "GET", uri: getURLArguments()["js"] } }
+			).body);
+		}
+
+	</script>
+</head>
+<body>
+
+</body>
