@@ -24,13 +24,9 @@
 
 		if(getURLArguments()["html"] != null) {
 
-			document.open();
-
-			document.write(autoCORS.send(
+			document.documentElement.innerHTML = autoCORS.send(
 				{ request: { method: "GET", uri: getURLArguments()["html"] } }
-			).body);
-
-			document.close();
+			).body;
 
 			Array.from(document.querySelectorAll("script")).forEach(script => {
 
