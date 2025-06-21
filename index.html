@@ -3,51 +3,63 @@
 	<script src="https://cdn.jsdelivr.net/gh/Telos-Project/AutoCORS/Code/autoCORS.js"></script>
 	<script>
 
-		function getURLArguments(url) {
+		let url = window.location.href;
+		let urlArguments = { };
 
-			if(url == null)
-				url = window.location.href;
+		url.replace(
+			/[?&]+([^=&]+)=([^&]*)/gi,
+			function(m, key, value) {
 
-			let vars = { };
-
-			url.replace(
-				/[?&]+([^=&]+)=([^&]*)/gi,
-				function(m, key, value) {
-					vars[decodeURIComponent(key)] = decodeURIComponent(value);
-				}
-			);
-
-			return vars;
-		}
+				urlArguments[decodeURIComponent(key)] =
+					decodeURIComponent(value);
+			}
+		);
 
 		autoCORS.applyDefault();
 
-		if(getURLArguments()["html"] != null) {
+		let scripts = [];
+
+		if(urlArguments["html"] != null) {
 
 			document.documentElement.innerHTML = autoCORS.send(
-				{ request: { method: "GET", uri: getURLArguments()["html"] } }
+				{ request: { method: "GET", uri: urlArguments["html"] } }
 			).body;
 
 			Array.from(document.querySelectorAll("script")).forEach(script => {
 
 				if(script.getAttribute("src") != null) {
 
-					(1, eval)(autoCORS.send({ request: {
+					scripts.push(autoCORS.send({ request: {
 						method: "GET",
 						uri: script.getAttribute("src")
 					} }).body)
 				}
 
-				(1, eval)(script.text);
+				scripts.push(script.text);
 			});
 		}
 
-		else if(getURLArguments()["js"] != null) {
+		else if(urlArguments["js"] != null) {
 			
-			eval(autoCORS.send(
-				{ request: { method: "GET", uri: getURLArguments()["js"] } }
+			scripts.push(autoCORS.send(
+				{ request: { method: "GET", uri: urlArguments["js"] } }
 			).body);
 		}
+
+		autoCORS.disable();
+
+		window.autoCORS = undefined;
+
+		scripts.forEach(script => {
+
+			try {
+				(1, eval)(script);
+			}
+
+			catch(error) {
+				console.log(error);
+			}
+		});
 
 	</script>
 </head>
