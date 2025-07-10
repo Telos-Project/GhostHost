@@ -4,23 +4,35 @@
 
 ***How you gonna host?***
 
-GhostHost is a hosting convention and solution for simple frontend-only web apps which allows for
-free, unlimited, and anonymous publication, all with a low technical barrier to entry.
+GhostHost, or Telos GhostHost, is a hosting convention and solution for simple frontend-only web
+apps which allows for free, unlimited, and anonymous publication, all with a low technical barrier
+to entry.
 
 ## 2 - Contents
 
 ### 2.1 - Conventions
 
-GhostHost is to operate as a standalone website, and may be provided with the URL argument "html"
-specifying the URL to a raw text file containing HTML code. When GhostHost is loaded with said
-argument provided, it shall render the HTML code in the specified file as a live site.
+GhostHost is to operate as a standalone website.
 
-In certain implementations, different arguments (such as "js") can be used to support languages
-other than html.
+#### 2.1.1 - Renderers
 
-### 2.2 - Usage
+GhostHost shall accept URL arguments, referred to as GhostHost renderers, which may either contain
+URLs to, or the string content of, external resources. It shall render the content of said
+resources according to the aliases of the corresponding arguments.
 
-An implementation of GhostHost is hosted at the following link:
+#### 2.1.2 - Adapters
+
+External applications hosted via GhostHost, which themselves serve to bootstrap external content
+according to URL arguments, are referred to as GhostHost adapters.
+
+### 2.2 - Defaults
+
+GhostHost, by default, supports the HTML renderer, for which the argument alias is "html", and the
+content is the URL to the raw text of an external HTML file.
+
+### 2.3 - Usage
+
+A default implementation of GhostHost is hosted at the following link:
 
     https://Telos-Project.github.io/GhostHost/
 
