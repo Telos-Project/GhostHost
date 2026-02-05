@@ -1,96 +1,99 @@
 <!DOCTYPE html>
-<head>
-	<script src="https://cdn.jsdelivr.net/gh/Telos-Project/AutoCORS/Code/autoCORS.js"></script>
-	<script>
+<html>
+	<head>
+		<script src="https://cdn.jsdelivr.net/gh/Telos-Project/AutoCORS/Code/autoCORS.js"></script>
+	</head>
+	<body>
+		<p id="load-text">LOADING...</p>
+		<script>
 
-		let scripts = [];
+			let scripts = [];
 
-		let clear = () => {
+			let clear = () => {
 
-			autoCORS.disable();
+				autoCORS.disable();
 
-			window.autoCORS = undefined;
+				window.autoCORS = undefined;
 
-			scripts.forEach(script => {
+				scripts.forEach(script => {
 
-				try {
-					(1, eval)(script);
-				}
-
-				catch(error) {
-					console.log(error);
-				}
-			});
-		};
-
-		let url = window.location.href;
-		let urlArguments = { };
-
-		url.replace(
-			/[?&]+([^=&]+)=([^&]*)/gi,
-			function(m, key, value) {
-
-				urlArguments[decodeURIComponent(key)] =
-					decodeURIComponent(value);
-			}
-		);
-
-		autoCORS.applyDefault();
-
-		if(urlArguments["html"] != null) {
-
-			autoCORS.load(urlArguments["html"], (data) => {
-
-				document.getElementById("load-text").remove();
-				document.documentElement.innerHTML = data;
-
-				let tags = Array.from(document.querySelectorAll("script"));
-				let count = 0;
-
-				if(tags.length == 0)
-					clear();
-
-				tags.forEach(script => {
-
-					if(script.getAttribute("src") != null) {
-
-						autoCORS.load(script.getAttribute("src"), (data) => {
-
-							scripts.push(data);
-							count++;
-
-							if(count >= tags.length)
-								clear();
-						});
+					try {
+						(1, eval)(script);
 					}
 
-					else
-						count++;
-
-					scripts.push(script.text);
-
-					if(count >= tags.length)
-						clear();
+					catch(error) {
+						console.log(error);
+					}
 				});
-			});
-		}
+			};
 
-		else if(urlArguments["js"] != null) {
+			let url = window.location.href;
+			let urlArguments = { };
 
-			autoCORS.load(urlArguments["js"], (data) => {
+			url.replace(
+				/[?&]+([^=&]+)=([^&]*)/gi,
+				function(m, key, value) {
 
-				document.getElementById("load-text").remove();
-				scripts.push(data);
+					urlArguments[decodeURIComponent(key)] =
+						decodeURIComponent(value);
+				}
+			);
 
+			autoCORS.applyDefault();
+
+			if(urlArguments["html"] != null) {
+
+				autoCORS.load(urlArguments["html"], (data) => {
+
+					document.documentElement.innerHTML = data;
+
+					let tags = Array.from(document.querySelectorAll("script"));
+					let count = 0;
+
+					if(tags.length == 0)
+						clear();
+
+					tags.forEach(script => {
+
+						if(script.getAttribute("src") != null) {
+
+							autoCORS.load(
+								script.getAttribute("src"), (data) => {
+
+									scripts.push(data);
+									count++;
+
+									if(count >= tags.length)
+										clear();
+								}
+							);
+						}
+
+						else
+							count++;
+
+						scripts.push(script.text);
+
+						if(count >= tags.length)
+							clear();
+					});
+				});
+			}
+
+			else if(urlArguments["js"] != null) {
+
+				autoCORS.load(urlArguments["js"], (data) => {
+
+					document.documentElement.innerHTML = "";
+					scripts.push(data);
+
+					clear();
+				});
+			}
+
+			else
 				clear();
-			});
-		}
 
-		else
-			clear();
-
-	</script>
-</head>
-<body>
-	<p id="load-text">LOADING...</p>
-</body>
+		</script>
+	</body>
+</html>
