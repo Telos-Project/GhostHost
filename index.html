@@ -41,6 +41,7 @@
 
 			autoCORS.load(urlArguments["html"], (data) => {
 
+				document.getElementById("load-text").remove();
 				document.documentElement.innerHTML = data;
 
 				let tags = Array.from(document.querySelectorAll("script"));
@@ -78,7 +79,7 @@
 
 			autoCORS.load(urlArguments["js"], (data) => {
 
-				document.documentElement.innerHTML = "";
+				document.getElementById("load-text").remove();
 				scripts.push(data);
 
 				clear();
@@ -91,5 +92,5 @@
 	</script>
 </head>
 <body>
-	<p>LOADING...</p>
+	<p id="load-text">LOADING...</p>
 </body>
